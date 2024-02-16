@@ -33,6 +33,7 @@ public class SecurityConfig {
             userInfoEndpointConfig -> userInfoEndpointConfig
               .userService(oAuth2UserService)
           )
+          // success handler config 등록ㄴ
           .successHandler(successHandler)
       )
       .authorizeHttpRequests(
