@@ -18,6 +18,7 @@ import spring.oauth.jwt.global.utils.handler.CustomSuccessHandler;
 public class SecurityConfig {
   private final CustomOAuth2UserService oAuth2UserService;
   private final CustomSuccessHandler successHandler;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -26,19 +27,22 @@ public class SecurityConfig {
       .formLogin(AbstractHttpConfigurer::disable)
       .httpBasic(AbstractHttpConfigurer::disable)
       // CustomOAuth2UserSerivce 등록
-      .oauth2Login(oAuth2 -> oAuth2.userInfoEndpoint(
-        userInfoEndpointConfig ->
-          userInfoEndpointConfig.userService(oAuth2UserService))
-        .successHandler(successHandler)
+      .oauth2Login(
+        oAuth2 -> oAuth2
+          .userInfoEndpoint(
+            userInfoEndpointConfig -> userInfoEndpointConfig
+              .userService(oAuth2UserService)
+          )
+          .successHandler(successHandler)
       )
       .authorizeHttpRequests(
         (auth) -> auth
-        .requestMatchers("/").permitAll()
-        .anyRequest().authenticated()
+          .requestMatchers("/").permitAll()
+          .anyRequest().authenticated()
       )
       .sessionManagement(
         (session) -> session
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       );
 
     return http.build();
